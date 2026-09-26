@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#087bd5" />
+    <meta
+      name="description"
+      content="Aqua Frank — доставка питної води та супутніх товарів в Івано-Франківську."
+    />
+    <title>Aqua Frank — доставка води</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <div class="topline">
+        <div class="container topline-content">
+          <span>Безкоштовна доставка по Івано-Франківську</span>
+          <span class="topline-contacts"><a href="tel:+380969724183">+380 96 972 41 83</a><i>|</i><a href="tel:+380995462910">+380 99 546 29 10</a></span>
+        </div>
+      </div>
+
+      <header class="header" id="top">
+        <div class="container header-content">
+          <a href="#top" class="brand" aria-label="Aqua Frank — на головну">
+            <img src="assets/logo.png" alt="Логотип Aqua Frank" />
+          </a>
+          <nav class="nav" aria-label="Навігація">
+            <a href="#catalog">Каталог</a>
+            <a href="#delivery">Доставка</a>
+            <a href="#about">Про воду</a>
+          </nav>
+          <div class="header-actions">
+            <a class="phone-link" href="tel:+380995462910" aria-label="Зателефонувати Aqua Frank">
+              <span class="phone-icon">⌕</span>
+              <span>+380 99 546 29 10</span>
+            </a>
+            <button class="cart-trigger" type="button" data-action="open-cart" aria-label="Відкрити кошик">
+              <span aria-hidden="true">🛒</span>
+              <span>Кошик</span>
+              <b id="cart-count">0</b>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-blob blob-one"></div>
+          <div class="hero-blob blob-two"></div>
+          <div class="container hero-content">
+            <div class="hero-copy">
+              <p class="eyebrow"><span></span> Чиста вода. Вчасна доставка.</p>
+              <h1>Вода, про яку <em>не треба</em> думати</h1>
+              <p class="hero-text">
+                Доставляємо питну воду Aqua Frank додому та в офіс. Просто оберіть потрібне — ми подбаємо про решту.
+              </p>
+              <div class="hero-buttons">
+                <a class="button button-primary" href="#catalog">Обрати воду <span>→</span></a>
+                <button class="button button-light" type="button" data-action="open-cart">Мій кошик</button>
+                <a class="button button-telegram" href="https://t.me/aquafrankbot" target="_blank" rel="noreferrer">Telegram-бот <span>↗</span></a>
+              </div>
+              <div class="hero-points">
+                <span><i>✓</i> Багатоступенева очистка</span>
+                <span><i>✓</i> Зручне замовлення</span>
+              </div>
+            </div>
+            <div class="hero-product" aria-label="Бутель питної води Aqua Frank 18,9 літра">
+              <div class="hero-ring"></div>
+              <div class="hero-water-note note-top">18,9 <small>л</small></div>
+              <img src="assets/water-189.jpg" alt="Бутель Aqua Frank 18,9 л" />
+              <div class="hero-water-note note-bottom"><span>від</span> 140 ₴</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="benefits" aria-label="Переваги Aqua Frank">
+          <div class="container benefits-grid">
+            <article><span class="benefit-icon">◌</span><div><b>Чиста вода</b><p>Щодня для вашої родини та команди</p></div></article>
+            <article><span class="benefit-icon">⌂</span><div><b>До ваших дверей</b><p>Доставимо додому або в офіс</p></div></article>
+            <article><span class="benefit-icon">◷</span><div><b>У зручний час</b><p>Домовимось про комфортну доставку</p></div></article>
+            <article><span class="benefit-icon">♡</span><div><b>Турбота про вас</b><p>Менеджер завжди на зв'язку</p></div></article>
+          </div>
+        </section>
+
+        <section class="catalog section" id="catalog">
+          <div class="container">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow"><span></span> Асортимент Aqua Frank</p>
+                <h2>Оберіть те, що <em>потрібно</em> сьогодні</h2>
+              </div>
+              <button class="all-products" type="button" data-filter="all">Усі товари <span>→</span></button>
+            </div>
+            <div class="category-tabs" role="tablist" aria-label="Категорії товарів">
+              <button class="category-tab active" type="button" data-filter="all">Усе</button>
+              <button class="category-tab" type="button" data-filter="water">Вода Aqua Frank</button>
+              <button class="category-tab" type="button" data-filter="morsh">Моршинська</button>
+              <button class="category-tab" type="button" data-filter="accessory">Помпи й аксесуари</button>
+            </div>
+            <div class="product-grid" id="product-grid" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section class="promo" id="about">
+          <div class="container promo-card">
+            <div class="promo-copy">
+              <p class="eyebrow eyebrow-light"><span></span> Пропозиція для знайомства</p>
+              <h2>Перші 2 бутлі<br />за <strong>200 грн</strong></h2>
+              <p>Акція для нових клієнтів на воду Aqua Frank 18,9 л.</p>
+              <button class="button button-white" type="button" data-add="water_189">Скористатися акцією <span>→</span></button>
+            </div>
+            <div class="promo-art" aria-hidden="true">
+              <span class="promo-bubble bubble-a"></span>
+              <span class="promo-bubble bubble-b"></span>
+              <span class="promo-bubble bubble-c"></span>
+              <img src="assets/water-189.jpg" alt="" />
+              <div class="promo-tag"><small>лише</small><b>100 ₴</b><small>за бутель</small></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="delivery section" id="delivery">
+          <div class="container delivery-grid">
+            <div class="delivery-visual" aria-hidden="true">
+              <div class="delivery-card card-a">💧</div>
+              <div class="delivery-card card-b">🚚</div>
+              <div class="delivery-path"></div>
+              <div class="delivery-pin pin-a"></div>
+              <div class="delivery-pin pin-b"></div>
+            </div>
+            <div class="delivery-copy">
+              <p class="eyebrow"><span></span> Доставка</p>
+              <h2>Як оформити <em>замовлення</em></h2>
+              <ol class="steps">
+                <li><b>01</b><div><strong>Додайте товари до кошика</strong><p>Оберіть воду, помпи та все потрібне.</p></div></li>
+                <li><b>02</b><div><strong>Заповніть коротку форму</strong><p>Залиште ім'я, телефон і адресу доставки.</p></div></li>
+                <li><b>03</b><div><strong>Отримайте замовлення</strong><p>Менеджер уточнить деталі та час доставки.</p></div></li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section class="contact-strip">
+          <div class="container contact-content">
+            <div><p>Маєте питання?</p><h2>Ми поруч, щоб допомогти</h2></div>
+            <div class="contact-buttons">
+              <div class="contact-phones"><a href="tel:+380969724183">+380 96 972 41 83</a><a href="tel:+380995462910">+380 99 546 29 10</a></div>
+              <a class="button button-telegram" href="https://t.me/aquafrankbot" target="_blank" rel="noreferrer">Telegram-бот <span>↗</span></a>
+              <a class="button button-white" href="https://www.instagram.com/aquafrank.if/" target="_blank" rel="noreferrer">Instagram <span>↗</span></a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="container footer-content">
+          <a href="#top" class="footer-brand"><img src="assets/logo.png" alt="Aqua Frank" /></a>
+          <p>© <span id="year"></span> Aqua Frank. Чиста вода. Вчасна доставка.</p>
+          <a href="#top">На початок ↑</a>
+        </div>
+      </footer>
+    </div>
+
+    <div class="overlay" id="overlay" hidden></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-label="Кошик" aria-hidden="true">
+      <div class="drawer-header"><div><p class="eyebrow"><span></span> Ваше замовлення</p><h2>Кошик</h2></div><button class="icon-button" type="button" data-action="close-cart" aria-label="Закрити">×</button></div>
+      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-summary" id="cart-summary"></div>
+      <button class="button button-primary checkout-button" type="button" data-action="checkout">Оформити замовлення <span>→</span></button>
+    </aside>
+
+    <section class="modal" id="checkout-modal" aria-modal="true" aria-labelledby="checkout-title" hidden>
+      <div class="modal-panel">
+        <button class="icon-button modal-close" type="button" data-action="close-checkout" aria-label="Закрити">×</button>
+        <div class="checkout-progress"><span class="active"></span><span></span><span></span><span></span></div>
+        <div id="checkout-content"></div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
