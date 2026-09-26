@@ -321,7 +321,7 @@ async function finishOrder() {
     <div class="success-state">
       <div class="success-icon">✓</div>
       <h2 id="checkout-title">Замовлення прийнято!</h2>
-      <p>Дякуємо, ${escapeHtml(order.name)}. Заявка <b>${order.id}</b> на суму <b>${formatMoney(order.total)}</b> сформована.${serverResult?.sentToTelegram ? " Її надіслано менеджерам Aqua Frank у Telegram." : serverResult ? " Заявку збережено на сервері; Telegram-бот тимчасово не налаштований." : " Для надсилання менеджеру запустіть сайт через server.js."}</p>
+      <p>Дякуємо, ${escapeHtml(order.name)}. Заявка <b>${order.id}</b> на суму <b>${formatMoney(order.total)}</b> сформована.${serverResult?.sentToTelegram ? " Її надіслано менеджерам Aqua Frank у Telegram." : serverResult ? " Заявку збережено на сервері; Telegram-бот тимчасово не налаштований." : ""}</p>
       <button class="button button-primary" type="button" data-action="return-to-shop">Повернутися до каталогу <span>→</span></button>
     </div>`;
   $$(".checkout-progress span").forEach((part) => part.classList.add("active"));
