@@ -8,11 +8,36 @@ const PRODUCTS = [
   { id: "m075_sport", name: "Моршинська Sport 0,75 л × 12", price: 365, category: "morsh", image: "assets/m075-sport.jpg", label: "Моршинська" },
   { id: "m05_light", name: "Моршинська слабогазована 0,5 л × 12", price: 275, category: "morsh", image: "assets/m05-light.jpg", label: "Моршинська" },
   { id: "m05_still", name: "Моршинська негазована 0,5 л × 12", price: 275, category: "morsh", image: "assets/m05-still.jpg", label: "Моршинська" },
-  { id: "m6_still", name: "Моршинська негазована 6 л × 2", price: 210, category: "morsh", image: "assets/m6-still.jpg", label: "Моршинська" },
+  {
+    id: "m6_still",
+    name: "Моршинка дитяча негазована 6 л × 2",
+    price: 210,
+    category: "morsh",
+    image: "assets/morshynka-kids-6l.png",
+    label: "Моршинка",
+    description: "Природна вода, яку безпечно пити малюкам з перших днів життя.",
+  },
+  {
+    id: "m033_sport",
+    name: "Моршинка Спорт 0,33 л × 12",
+    price: 260,
+    category: "morsh",
+    image: "assets/morshynka-sport-033.jpg",
+    label: "Моршинка",
+    description: "Легкий та зручний формат для прогулянки або дороги.",
+  },
   { id: "pump_electric", name: "Помпа електрична PRIMO", price: 270, category: "accessory", image: "assets/pump-electric.jpg", label: "Аксесуар" },
   { id: "pump_manual", name: "Помпа механічна Lilu", price: 200, category: "accessory", image: "assets/pump-manual.jpg", label: "Аксесуар" },
   { id: "handle", name: "Ручка для перенесення VIAPLAST", price: 90, category: "accessory", image: "assets/handle.jpg", label: "Аксесуар" },
   { id: "cups", name: "Стакан паперовий 250 мл (50 шт)", price: 65, category: "accessory", image: "assets/cups.jpg", label: "Аксесуар" },
+  {
+    id: "cups_175",
+    name: "Стакан паперовий білий 175 мл (50 шт)",
+    price: 58,
+    category: "accessory",
+    image: "assets/paper-cups-175ml.webp",
+    label: "Аксесуар",
+  },
 ];
 
 const BOTTLE_DEPOSIT = 400;
@@ -113,8 +138,9 @@ function renderProducts() {
     return `
       <article class="product-card">
         <span class="product-label${specialClass}">${label}</span>
-        <div class="product-photo"><img src="${product.image}" alt="${product.name}" loading="lazy" /></div>
-        <h3>${product.name}</h3>
+        <div class="product-photo"><img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" /></div>
+        <h3>${escapeHtml(product.name)}</h3>
+        ${product.description ? `<p class="product-description">${escapeHtml(product.description)}</p>` : ""}
         <div class="product-bottom">
           <div class="price">${formatMoney(product.price)} <small>/ шт.</small></div>
           <button class="add-button" type="button" data-add="${product.id}" aria-label="Додати ${product.name} до кошика">+</button>
@@ -194,7 +220,15 @@ function showCheckout() {
   closeCart();
   checkoutState = {
     step: 1,
-    data: { name: "", phone: "", address: "", hasExchange: true, payment: "Готівка" },
+    data: {
+      name: "",
+      phone: "",
+      address: "",
+      deliveryTime: "До обіду — до 13:00",
+      comment: "",
+      hasExchange: true,
+      payment: "Готівка",
+    },
   };
   $("#checkout-modal").hidden = false;
   renderCheckout();
@@ -232,15 +266,26 @@ function renderCheckout() {
   if (step === 2) {
     const needsExchange = Boolean(getCart().water_189);
     content.innerHTML = `
-      <h2 class="checkout-title" id="checkout-title">Адреса та тара</h2>
-      <p class="checkout-lead">${needsExchange ? "Підкажіть, чи є у вас пусті бутлі на обмін." : "Вкажіть адресу, куди доставити замовлення."}</p>
+      <h2 class="checkout-title" id="checkout-title">Адреса та час доставки</h2>
+      <p class="checkout-lead">Вкажіть адресу та оберіть орієнтовний час. За потреби залиште коментар для кур'єра.</p>
       <form id="checkout-details" novalidate>
+        <label class="form-group"><span class="form-label">Адреса доставки</span><input class="text-input" name="address" value="${escapeHtml(data.address)}" placeholder="Вулиця, будинок, квартира або офіс" autocomplete="street-address" /></label>
+        <fieldset class="form-fieldset">
+          <legend class="form-label">Коли вам зручно прийняти замовлення?</legend>
+          <p class="form-hint">Оберіть орієнтовне вікно доставки.</p>
+          <div class="option-list">
+            <label class="choice-option"><input type="radio" name="deliveryTime" value="До обіду — до 13:00" ${data.deliveryTime === "До обіду — до 13:00" ? "checked" : ""} /><span class="choice-circle"></span><span><strong>До обіду — до 13:00</strong><small>Зручно прийняти воду в першій половині дня.</small></span></label>
+            <label class="choice-option"><input type="radio" name="deliveryTime" value="Після обіду — до 17:00" ${data.deliveryTime === "Після обіду — до 17:00" ? "checked" : ""} /><span class="choice-circle"></span><span><strong>Після обіду — до 17:00</strong><small>Зручно прийняти воду в другій половині дня.</small></span></label>
+            <label class="choice-option"><input type="radio" name="deliveryTime" value="Потрібен інший час" ${data.deliveryTime === "Потрібен інший час" ? "checked" : ""} /><span class="choice-circle"></span><span><strong>Потрібен інший час</strong><small>Напишіть бажаний час у коментарі нижче.</small></span></label>
+          </div>
+        </fieldset>
+        <label class="form-group"><span class="form-label">Коментар до замовлення <small>необов'язково</small></span><textarea class="text-input text-area" name="comment" rows="3" maxlength="500" placeholder="Наприклад: зателефонуйте за 10 хвилин, код домофона, бажаний час доставки">${escapeHtml(data.comment)}</textarea></label>
         ${needsExchange ? `
+          <p class="form-label exchange-label">Чи є у вас пусті бутлі на обмін?</p>
           <div class="option-list">
             <label class="choice-option"><input type="radio" name="exchange" value="yes" ${data.hasExchange ? "checked" : ""} /><span class="choice-circle"></span><span><strong>Так, є тара на обмін</strong><small>Застава за бутлі не додається.</small></span></label>
             <label class="choice-option"><input type="radio" name="exchange" value="no" ${!data.hasExchange ? "checked" : ""} /><span class="choice-circle"></span><span><strong>Ні, потрібна нова тара</strong><small>Додамо заставу ${formatMoney(BOTTLE_DEPOSIT)} за кожен бутель 18,9 л.</small></span></label>
           </div>` : ""}
-        <label class="form-group"><span class="form-label">Адреса доставки</span><input class="text-input" name="address" value="${escapeHtml(data.address)}" placeholder="Вулиця, будинок, квартира або офіс" autocomplete="street-address" /></label>
         <p class="form-error" id="details-error"></p>
         <div class="modal-actions"><button class="button button-light" type="button" data-action="checkout-back">← Назад</button><button class="button button-primary" type="submit">Далі <span>→</span></button></div>
       </form>`;
@@ -269,6 +314,8 @@ function renderCheckout() {
       <div class="review-row"><span>Ім'я</span><b>${escapeHtml(data.name)}</b></div>
       <div class="review-row"><span>Телефон</span><b>${escapeHtml(data.phone)}</b></div>
       <div class="review-row"><span>Адреса</span><b>${escapeHtml(data.address)}</b></div>
+      <div class="review-row"><span>Час доставки</span><b>${escapeHtml(data.deliveryTime)}</b></div>
+      ${data.comment ? `<div class="review-row"><span>Коментар</span><b>${escapeHtml(data.comment)}</b></div>` : ""}
       <div class="review-row"><span>Оплата</span><b>${escapeHtml(data.payment)}</b></div>
     </div>
     <div class="checkout-lines">
@@ -321,7 +368,7 @@ async function finishOrder() {
     <div class="success-state">
       <div class="success-icon">✓</div>
       <h2 id="checkout-title">Замовлення прийнято!</h2>
-      <p>Дякуємо, ${escapeHtml(order.name)}. Заявка <b>${order.id}</b> на суму <b>${formatMoney(order.total)}</b> сформована.${serverResult?.sentToTelegram ? " Її надіслано менеджерам Aqua Frank у Telegram." : serverResult ? " Заявку збережено на сервері; Telegram-бот тимчасово не налаштований." : ""}</p>
+      <p>Дякуємо, ${escapeHtml(order.name)}. Заявка <b>${order.id}</b> на суму <b>${formatMoney(order.total)}</b> сформована.${serverResult?.sentToTelegram ? " Її надіслано менеджерам Aqua Frank у Telegram." : serverResult ? " Заявку збережено на сервері; Telegram-бот тимчасово не налаштований." : " Для надсилання менеджеру запустіть сайт через server.js."}</p>
       <button class="button button-primary" type="button" data-action="return-to-shop">Повернутися до каталогу <span>→</span></button>
     </div>`;
   $$(".checkout-progress span").forEach((part) => part.classList.add("active"));
@@ -347,14 +394,22 @@ function handleContactSubmit(form) {
 
 function handleDetailsSubmit(form) {
   const address = form.elements.address.value.trim();
+  const deliveryTime = form.elements.deliveryTime.value;
+  const comment = form.elements.comment.value.trim();
   const error = $("#details-error");
   if (address.length < 5) {
     error.textContent = "Вкажіть, будь ласка, вулицю та номер будинку.";
     return;
   }
+  if (deliveryTime === "Потрібен інший час" && comment.length < 3) {
+    error.textContent = "Вкажіть бажаний час доставки у коментарі.";
+    return;
+  }
   const exchange = form.elements.exchange;
   checkoutState.data.hasExchange = exchange ? exchange.value === "yes" : true;
   checkoutState.data.address = address;
+  checkoutState.data.deliveryTime = deliveryTime;
+  checkoutState.data.comment = comment;
   checkoutState.step = 3;
   renderCheckout();
 }

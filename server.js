@@ -17,6 +17,7 @@ const MIME_TYPES = {
   ".jpg": "image/jpeg",
   ".js": "application/javascript; charset=utf-8",
   ".png": "image/png",
+  ".webp": "image/webp",
 };
 
 function sendJson(response, statusCode, data) {
@@ -48,10 +49,21 @@ function normalizeOrder(input) {
   const name = String(input.name || "").trim();
   const phone = String(input.phone || "").trim();
   const address = String(input.address || "").trim();
+  const deliveryTime = String(input.deliveryTime || "").trim();
+  const comment = String(input.comment || "").trim();
   const payment = String(input.payment || "").trim();
   const total = Number(input.total);
 
-  if (name.length < 2 || phone.length < 9 || address.length < 5 || !payment || !items.length || !Number.isFinite(total)) {
+  if (
+    name.length < 2
+    || phone.length < 9
+    || address.length < 5
+    || !deliveryTime
+    || (deliveryTime === "Потрібен інший час" && comment.length < 3)
+    || !payment
+    || !items.length
+    || !Number.isFinite(total)
+  ) {
     throw new Error("Перевірте дані замовлення.");
   }
 
@@ -61,6 +73,8 @@ function normalizeOrder(input) {
     name,
     phone,
     address,
+    deliveryTime: deliveryTime.slice(0, 100),
+    comment: comment.slice(0, 500),
     payment,
     hasExchange: Boolean(input.hasExchange),
     total: Math.round(total),
@@ -84,6 +98,8 @@ function orderMessage(order) {
     `<b>Клієнт:</b> ${escapeHtml(order.name)}`,
     `<b>Телефон:</b> ${escapeHtml(order.phone)}`,
     `<b>Адреса:</b> ${escapeHtml(order.address)}`,
+    `<b>Час доставки:</b> ${escapeHtml(order.deliveryTime)}`,
+    ...(order.comment ? [`<b>Коментар:</b> ${escapeHtml(order.comment)}`] : []),
     `<b>Оплата:</b> ${escapeHtml(order.payment)}`,
     `<b>Тара на обмін:</b> ${order.hasExchange ? "так" : "ні"}`,
     "",
