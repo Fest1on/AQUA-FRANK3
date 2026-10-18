@@ -6,7 +6,7 @@ const path = require("path");
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT || 4173);
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8383641781:AAEywcdPDDsaVc2JCOVF2_rwefCOCJB7CAU";
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 // Чат Aqua Frank для сповіщень про нові замовлення. За потреби його можна
 // перевизначити через TELEGRAM_CHAT_ID без редагування коду.
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "-1004380997543";
@@ -177,9 +177,9 @@ http.createServer((request, response) => {
   }
   response.writeHead(405);
   response.end("Method not allowed");
-}).listen(PORT, () => {
-  console.log(`Aqua Frank працює: http://localhost:${PORT}`);
+}).listen(PORT, "0.0.0.0", () => {
+  console.log(`Aqua Frank працює на порту ${PORT}`);
   if (!TELEGRAM_BOT_TOKEN) {
-    console.log("Telegram не налаштований: задайте TELEGRAM_BOT_TOKEN, щоб заявки надсилалися у чат Aqua Frank.");
+    console.log("Telegram не налаштований: задайте змінну середовища TELEGRAM_BOT_TOKEN, щоб заявки надсилалися у чат Aqua Frank.");
   }
 });

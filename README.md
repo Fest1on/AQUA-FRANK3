@@ -7,10 +7,10 @@
 У папці проєкту виконайте:
 
 ```powershell
-node server.js
+npm start
 ```
 
-Потім перейдіть на `http://localhost:4173`.
+Потім перейдіть на `http://localhost:4173`. Порт можна змінити через змінну `PORT` (на Railway її задає платформа). `npm start` запускає `node server.js`.
 
 ## Примітка про замовлення
 
@@ -20,8 +20,10 @@ node server.js
 
 ```powershell
 $env:TELEGRAM_BOT_TOKEN = "токен_вашого_бота"
-node server.js
+npm start
 ```
+
+У production на Railway додайте `TELEGRAM_BOT_TOKEN` як змінну сервісу (Variables). Без токена заявки лише зберігаються у `data/orders.ndjson`, а Telegram пропускається.
 
 За потреби можна змінити чат через `$env:TELEGRAM_CHAT_ID` перед запуском.
 
