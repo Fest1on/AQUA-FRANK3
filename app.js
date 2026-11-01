@@ -133,11 +133,12 @@ function renderProducts() {
     ? PRODUCTS
     : PRODUCTS.filter((product) => product.category === currentFilter);
   $("#product-grid").innerHTML = products.map((product) => {
-    const specialClass = product.id === "water_189" ? " accent" : "";
-    const label = product.id === "water_189" ? "Від 135 ₴ при замовленні від 10 шт." : product.label;
+    const productLabel = product.id === "water_189"
+      ? ""
+      : `<span class="product-label">${product.label}</span>`;
     return `
       <article class="product-card">
-        <span class="product-label${specialClass}">${label}</span>
+        ${productLabel}
         <div class="product-photo"><img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" /></div>
         <h3>${escapeHtml(product.name)}</h3>
         ${product.description ? `<p class="product-description">${escapeHtml(product.description)}</p>` : ""}
