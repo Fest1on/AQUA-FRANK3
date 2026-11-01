@@ -1,20 +1,20 @@
 const PRODUCTS = [
   { id: "water_189", name: "Вода Aqua Frank 18,9 л", price: 150, category: "water", image: "assets/water-189.jpg", label: "Основна вода" },
-  { id: "m15_light", name: "Моршинська слабогазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-light.jpg", label: "Моршинська" },
-  { id: "m15_sparkling", name: "Моршинська сильногазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-sparkling.jpg", label: "Моршинська" },
-  { id: "m15_still", name: "Моршинська негазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-still.jpg", label: "Моршинська" },
-  { id: "m075_still", name: "Моршинська негазована 0,75 л × 12", price: 310, category: "morsh", image: "assets/m075-still.jpg", label: "Моршинська" },
-  { id: "m075_light", name: "Моршинська слабогазована 0,75 л × 12", price: 310, category: "morsh", image: "assets/m075-light.jpg", label: "Моршинська" },
-  { id: "m075_sport", name: "Моршинська Sport 0,75 л × 12", price: 380, category: "morsh", image: "assets/m075-sport.jpg", label: "Моршинська" },
-  { id: "m05_light", name: "Моршинська слабогазована 0,5 л × 12", price: 285, category: "morsh", image: "assets/m05-light.jpg", label: "Моршинська" },
-  { id: "m05_still", name: "Моршинська негазована 0,5 л × 12", price: 285, category: "morsh", image: "assets/m05-still.jpg", label: "Моршинська" },
+  { id: "m15_light", name: "Моршинська слабогазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-light.jpg", label: "Вода в пляшках" },
+  { id: "m15_sparkling", name: "Моршинська сильногазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-sparkling.jpg", label: "Вода в пляшках" },
+  { id: "m15_still", name: "Моршинська негазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-still.jpg", label: "Вода в пляшках" },
+  { id: "m075_still", name: "Моршинська негазована 0,75 л × 12", price: 310, category: "morsh", image: "assets/m075-still.jpg", label: "Вода в пляшках" },
+  { id: "m075_light", name: "Моршинська слабогазована 0,75 л × 12", price: 310, category: "morsh", image: "assets/m075-light.jpg", label: "Вода в пляшках" },
+  { id: "m075_sport", name: "Моршинська Sport 0,75 л × 12", price: 380, category: "morsh", image: "assets/m075-sport.jpg", label: "Вода в пляшках" },
+  { id: "m05_light", name: "Моршинська слабогазована 0,5 л × 12", price: 285, category: "morsh", image: "assets/m05-light.jpg", label: "Вода в пляшках" },
+  { id: "m05_still", name: "Моршинська негазована 0,5 л × 12", price: 285, category: "morsh", image: "assets/m05-still.jpg", label: "Вода в пляшках" },
   {
     id: "m6_still",
     name: "Моршинка дитяча негазована 6 л × 2",
     price: 210,
     category: "morsh",
     image: "assets/morshynka-kids-6l.png",
-    label: "Моршинка",
+    label: "Вода в пляшках",
     description: "Природна вода, яку безпечно пити малюкам з перших днів життя.",
   },
   {
@@ -23,20 +23,20 @@ const PRODUCTS = [
     price: 260,
     category: "morsh",
     image: "assets/morshynka-sport-033.jpg",
-    label: "Моршинка",
+    label: "Вода в пляшках",
     description: "Легкий та зручний формат для прогулянки або дороги.",
   },
-  { id: "pump_electric", name: "Помпа електрична PRIMO", price: 280, category: "accessory", image: "assets/pump-electric.jpg", label: "Аксесуар" },
-  { id: "pump_manual", name: "Помпа механічна Lilu", price: 220, category: "accessory", image: "assets/pump-manual.jpg", label: "Аксесуар" },
+  { id: "pump_electric", name: "Помпа електрична PRIMO", price: 280, category: "pumps", image: "assets/pump-electric.jpg", label: "Помпа" },
+  { id: "pump_manual", name: "Помпа механічна Lilu", price: 220, category: "pumps", image: "assets/pump-manual.jpg", label: "Помпа" },
   { id: "handle", name: "Ручка для перенесення VIAPLAST", price: 90, category: "accessory", image: "assets/handle.jpg", label: "Аксесуар" },
-  { id: "cups", name: "Стакан паперовий 250 мл (50 шт)", price: 70, category: "accessory", image: "assets/cups.jpg", label: "Аксесуар" },
+  { id: "cups", name: "Стакан паперовий 250 мл (50 шт)", price: 70, category: "cups", image: "assets/cups.jpg", label: "Стакани" },
   {
     id: "cups_175",
     name: "Стакан паперовий білий 175 мл (50 шт)",
     price: 60,
-    category: "accessory",
+    category: "cups",
     image: "assets/paper-cups-175ml.webp",
-    label: "Аксесуар",
+    label: "Стакани",
   },
 ];
 
@@ -485,5 +485,24 @@ document.addEventListener("keydown", (event) => {
   else closeCart();
 });
 
+function setupCategoryTabs() {
+  const tabs = $$(".category-tab");
+  const tabFor = (filter) => tabs.find((tab) => tab.dataset.filter === filter);
+  const morshTab = tabFor("morsh");
+  if (morshTab) morshTab.textContent = "Вода в пляшках";
+  const accessoryTab = tabFor("accessory");
+  if (!accessoryTab) return;
+  accessoryTab.textContent = "Аксесуари";
+  [["pumps", "Помпи"], ["cups", "Стакани"]].forEach(([filter, title]) => {
+    if (tabFor(filter)) return;
+    const tab = accessoryTab.cloneNode(true);
+    tab.dataset.filter = filter;
+    tab.textContent = title;
+    tab.classList.remove("active");
+    accessoryTab.before(tab);
+  });
+}
+
+setupCategoryTabs();
 $("#year").textContent = new Date().getFullYear();
 renderAll();
