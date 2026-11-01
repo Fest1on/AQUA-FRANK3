@@ -139,7 +139,7 @@ function renderProducts() {
     return `
       <article class="product-card">
         ${productLabel}
-        <div class="product-photo"><img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" /></div>
+        <div class="product-photo" style="display:flex;align-items:center;justify-content:center;overflow:hidden;height:220px;"><img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" style="width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;" /></div>
         <h3>${escapeHtml(product.name)}</h3>
         ${product.description ? `<p class="product-description">${escapeHtml(product.description)}</p>` : ""}
         <div class="product-bottom">
