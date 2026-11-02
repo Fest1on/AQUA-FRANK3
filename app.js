@@ -91,35 +91,18 @@ function waterUnitPrice(quantity) {
   return 150;
 }
 
-// Акція для нових клієнтів (така сама, як у Telegram-боті): від 2 бутлів
-// перший — 150 ₴, другий — 70 ₴, кожен наступний — 150 ₴.
-const PROMO = { requiredQty: 2, firstPrice: 150, secondPrice: 70, nextPrice: 150 };
-
-function promoWaterTotal(quantity) {
-  return PROMO.firstPrice + PROMO.secondPrice + (quantity - PROMO.requiredQty) * PROMO.nextPrice;
-}
-
 function getPricing(cart = getCart(), hasExchange = true) {
   const newCustomer = isNewCustomer();
   const lines = Object.entries(cart).map(([id, quantity]) => {
     const product = productById(id);
-    const isWater = id === "water_189";
-    const unitPrice = isWater ? waterUnitPrice(quantity) : product.price;
-    const regularTotal = unitPrice * quantity;
-    // Акція діє, лише якщо вона вигідніша за звичайну/оптову ціну.
-    const promoTotal = isWater && newCustomer && quantity >= PROMO.requiredQty ? promoWaterTotal(quantity) : null;
-    const promoApplies = promoTotal !== null && promoTotal < regularTotal;
-    const total = promoApplies ? promoTotal : regularTotal;
-
-    let note = "";
-    if (promoApplies) {
-      const savings = product.price * quantity - promoTotal;
-      note = quantity === PROMO.requiredQty
-        ? `🎉 Акція для нових клієнтів (1-й бутель — ${PROMO.firstPrice} ₴, 2-й — ${PROMO.secondPrice} ₴, знижка ${savings} ₴)`
-        : `🎉 Акція для нових клієнтів (${PROMO.firstPrice} + ${PROMO.secondPrice} + ${quantity - PROMO.requiredQty}×${PROMO.nextPrice} = ${promoTotal} ₴, знижка ${savings} ₴)`;
-    } else if (isWater && unitPrice < product.price) {
-      note = `Оптова ціна ${unitPrice} ₴/шт.`;
-    }
+    const promoApplies = id === "water_189" && quantity === 2 && newCustomer;
+    const unitPrice = id === "water_189" ? waterUnitPrice(quantity) : product.price;
+    const total = promoApplies ? 220 : unitPrice * quantity;
+    const note = promoApplies
+      ? "Акція для нових клієнтів"
+      : id === "water_189" && unitPrice < product.price
+        ? `Оптова ціна ${unitPrice} ₴/шт.`
+        : "";
     return { id, product, quantity, unitPrice, total, note, promoApplies };
   });
   const subtotal = lines.reduce((sum, line) => sum + line.total, 0);
@@ -365,9 +348,6 @@ async function finishOrder() {
     createdAt: new Date().toISOString(),
     cart,
     total: pricing.total,
-    newCustomer: pricing.newCustomer,
-    waterQuantity: pricing.waterQuantity,
-    deposit: pricing.deposit,
     ...checkoutState.data,
     items: pricing.lines.map((line) => ({ name: line.product.name, quantity: line.quantity, total: line.total, note: line.note })),
   };

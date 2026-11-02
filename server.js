@@ -6,7 +6,7 @@ const path = require("path");
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT || 4173);
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8383641781:AAEywcdPDDsaVc2JCOVF2_rwefCOCJB7CAU";
 // Чат Aqua Frank для сповіщень про нові замовлення. За потреби його можна
 // перевизначити через TELEGRAM_CHAT_ID без редагування коду.
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "-1004380997543";
@@ -77,42 +77,35 @@ function normalizeOrder(input) {
     comment: comment.slice(0, 500),
     payment,
     hasExchange: Boolean(input.hasExchange),
-    newCustomer: Boolean(input.newCustomer),
-    waterQuantity: Math.max(0, Math.min(99, Math.round(Number(input.waterQuantity) || 0))),
-    deposit: Math.max(0, Math.round(Number(input.deposit) || 0)),
     total: Math.round(total),
-    items: items.slice(0, 30).map((item) => ({
+    items: items.map((item) => ({
       name: String(item.name || "Товар").slice(0, 200),
       quantity: Math.max(1, Math.min(99, Number(item.quantity) || 1)),
       total: Math.max(0, Math.round(Number(item.total) || 0)),
-      note: String(item.note || "").replaceAll("₴", "грн").slice(0, 160),
+      note: String(item.note || "").slice(0, 160),
     })),
   };
 }
 
 function orderMessage(order) {
-  const lines = order.items.map(
-    (item) => `• ${escapeHtml(item.name)} × ${item.quantity} = ${formatMoney(item.total)}${item.note ? ` ${escapeHtml(item.note)}` : ""}`,
-  );
-  if (order.deposit > 0) {
-    lines.push(`• Застава за новий бутель 18,9 л × ${order.waterQuantity} = ${formatMoney(order.deposit)}`);
-  }
+  const items = order.items
+    .map((item) => `• ${escapeHtml(item.name)} × ${item.quantity} = ${formatMoney(item.total)}${item.note ? ` (${escapeHtml(item.note)})` : ""}`)
+    .join("\n");
 
   return [
-    `🔔 <b>НОВЕ ЗАМОВЛЕННЯ ${escapeHtml(order.id)}!</b>`,
-    "🌐 <i>Замовлення з сайту</i>",
+    `🔔 <b>Нове замовлення ${escapeHtml(order.id)}</b>`,
     "",
-    `👤 <b>Клієнт:</b> ${escapeHtml(order.name)}${order.newCustomer ? " 🆕 <i>(новий клієнт)</i>" : ""}`,
-    `📞 <b>Телефон:</b> ${escapeHtml(order.phone)}`,
-    `📍 <b>Адреса:</b> ${escapeHtml(order.address)}`,
-    `💳 <b>Оплата:</b> ${escapeHtml(order.payment)}`,
-    `🕓 <b>Час доставки:</b> ${escapeHtml(order.deliveryTime)}`,
-    `💬 <b>Коментар:</b> ${escapeHtml(order.comment || "—")}`,
-    ...(order.waterQuantity > 0 ? [`♻️ <b>Тара на обмін:</b> ${order.hasExchange ? "є" : "немає (потрібна нова + застава)"}`] : []),
+    `<b>Клієнт:</b> ${escapeHtml(order.name)}`,
+    `<b>Телефон:</b> ${escapeHtml(order.phone)}`,
+    `<b>Адреса:</b> ${escapeHtml(order.address)}`,
+    `<b>Час доставки:</b> ${escapeHtml(order.deliveryTime)}`,
+    ...(order.comment ? [`<b>Коментар:</b> ${escapeHtml(order.comment)}`] : []),
+    `<b>Оплата:</b> ${escapeHtml(order.payment)}`,
+    `<b>Тара на обмін:</b> ${order.hasExchange ? "так" : "ні"}`,
     "",
-    `📦 <b>Замовлення:</b>\n${lines.join("\n")}`,
+    `<b>Товари:</b>\n${items}`,
     "",
-    `💵 <b>СУМА:</b> ${formatMoney(order.total)}`,
+    `<b>Разом:</b> ${formatMoney(order.total)}`,
   ].join("\n");
 }
 
@@ -129,10 +122,7 @@ async function notifyTelegram(order) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: orderMessage(order), parse_mode: "HTML" }),
   });
-  if (!response.ok) {
-    const details = await response.text().catch(() => "");
-    throw new Error(`Telegram ${response.status}: ${details.slice(0, 300)}`);
-  }
+  if (!response.ok) throw new Error("Telegram не прийняв повідомлення.");
   return true;
 }
 
@@ -145,9 +135,8 @@ async function handleOrder(request, response) {
 
     try {
       sentToTelegram = await notifyTelegram(order);
-    } catch (error) {
+    } catch {
       telegramWarning = true;
-      console.error(`[${order.id}] Не вдалося надіслати в Telegram:`, error.message);
     }
 
     sendJson(response, 201, { ok: true, orderId: order.id, sentToTelegram, telegramWarning });
