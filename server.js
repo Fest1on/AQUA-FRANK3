@@ -7,41 +7,29 @@ const path = require("path");
 
 const ROOT = __dirname;
 
-// Завантажуємо локальні налаштування з .env без сторонніх пакетів.
-// Змінні, передані середовищем запуску, мають вищий пріоритет.
-function loadEnvFile() {
-  const envPath = path.join(ROOT, ".env");
-  if (!fsSync.existsSync(envPath)) return;
+// Локальна конфігурація Telegram зберігається окремо від коду.
+// Файл telegram-config.json доданий до .gitignore і не повинен потрапляти в GitHub.
+// Змінні середовища хостингу мають вищий пріоритет, тож сервер можна
+// розгортати і без локального конфігураційного файла.
+function loadLocalConfig() {
+  const configPath = path.join(ROOT, "telegram-config.json");
+  if (!fsSync.existsSync(configPath)) return {};
 
-  const content = fsSync.readFileSync(envPath, "utf8");
-  for (const rawLine of content.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith("#")) continue;
-
-    const separator = line.indexOf("=");
-    if (separator <= 0) continue;
-
-    const key = line.slice(0, separator).trim();
-    let value = line.slice(separator + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"'))
-      || (value.startsWith("'") && value.endsWith("'"))
-    ) {
-      value = value.slice(1, -1);
-    }
-    if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
-      process.env[key] = value;
-    }
+  try {
+    const parsed = JSON.parse(fsSync.readFileSync(configPath, "utf8"));
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    return parsed;
+  } catch (error) {
+    console.error("Не вдалося прочитати telegram-config.json:", error.message);
+    return {};
   }
 }
 
-loadEnvFile();
-
+const localConfig = loadLocalConfig();
 const PORT = Number(process.env.PORT || 4173);
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
-// Чат Aqua Frank для сповіщень про нові замовлення. За потреби його можна
-// перевизначити через TELEGRAM_CHAT_ID без редагування коду.
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "-1004380997543";
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || localConfig.telegramBotToken || "8383641781:AAEywcdPDDsaVc2JCOVF2_rwefCOCJB7CAU";
+// Чат Aqua Frank для сповіщень про нові замовлення.
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || localConfig.telegramChatId || "-1004380997543";
 const MAX_BODY_SIZE = 100_000;
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
