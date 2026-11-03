@@ -1,19 +1,19 @@
 const PRODUCTS = [
-  { id: "water_189", name: "Вода Aqua Frank 18,9 л", price: 150, category: "water", image: "assets/water-189.jpg", label: "Основна вода" },
-  { id: "m15_light", name: "Моршинська слабогазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-light.jpg", label: "Моршинська" },
-  { id: "m15_sparkling", name: "Моршинська сильногазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-sparkling.jpg", label: "Моршинська" },
-  { id: "m15_still", name: "Моршинська негазована 1,5 л × 6", price: 210, category: "morsh", image: "assets/m15-still.jpg", label: "Моршинська" },
-  { id: "m075_still", name: "Моршинська негазована 0,75 л × 12", price: 310, category: "morsh", image: "assets/m075-still.jpg", label: "Моршинська" },
-  { id: "m075_light", name: "Моршинська слабогазована 0,75 л × 12", price: 310, category: "morsh", image: "assets/m075-light.jpg", label: "Моршинська" },
-  { id: "m075_sport", name: "Моршинська Sport 0,75 л × 12", price: 380, category: "morsh", image: "assets/m075-sport.jpg", label: "Моршинська" },
-  { id: "m05_light", name: "Моршинська слабогазована 0,5 л × 12", price: 285, category: "morsh", image: "assets/m05-light.jpg", label: "Моршинська" },
-  { id: "m05_still", name: "Моршинська негазована 0,5 л × 12", price: 285, category: "morsh", image: "assets/m05-still.jpg", label: "Моршинська" },
+  { id: "water_189", name: "Вода Aqua Frank 18,9 л", price: 150, category: "bottled_water", image: "assets/water-189.webp", label: "Основна вода" },
+  { id: "m15_light", name: "Моршинська слабогазована 1,5 л × 6", price: 210, category: "bottled_water", image: "assets/m15-light.webp", label: "Моршинська" },
+  { id: "m15_sparkling", name: "Моршинська сильногазована 1,5 л × 6", price: 210, category: "bottled_water", image: "assets/m15-sparkling.webp", label: "Моршинська" },
+  { id: "m15_still", name: "Моршинська негазована 1,5 л × 6", price: 210, category: "bottled_water", image: "assets/m15-still.webp", label: "Моршинська" },
+  { id: "m075_still", name: "Моршинська негазована 0,75 л × 12", price: 310, category: "bottled_water", image: "assets/m075-still.webp", label: "Моршинська" },
+  { id: "m075_light", name: "Моршинська слабогазована 0,75 л × 12", price: 310, category: "bottled_water", image: "assets/m075-light.webp", label: "Моршинська" },
+  { id: "m075_sport", name: "Моршинська Sport 0,75 л × 12", price: 380, category: "bottled_water", image: "assets/m075-sport.webp", label: "Моршинська" },
+  { id: "m05_light", name: "Моршинська слабогазована 0,5 л × 12", price: 285, category: "bottled_water", image: "assets/m05-light.webp", label: "Моршинська" },
+  { id: "m05_still", name: "Моршинська негазована 0,5 л × 12", price: 285, category: "bottled_water", image: "assets/m05-still.webp", label: "Моршинська" },
   {
     id: "m6_still",
     name: "Моршинка дитяча негазована 6 л × 2",
     price: 210,
-    category: "morsh",
-    image: "assets/morshynka-kids-6l.png",
+    category: "bottled_water",
+    image: "assets/morshynka-kids-6l.webp",
     label: "Моршинка",
     description: "Природна вода, яку безпечно пити малюкам з перших днів життя.",
   },
@@ -21,22 +21,22 @@ const PRODUCTS = [
     id: "m033_sport",
     name: "Моршинка Спорт 0,33 л × 12",
     price: 260,
-    category: "morsh",
-    image: "assets/morshynka-sport-033.jpg",
+    category: "bottled_water",
+    image: "assets/morshynka-sport-033.webp",
     label: "Моршинка",
     description: "Легкий та зручний формат для прогулянки або дороги.",
   },
-  { id: "pump_electric", name: "Помпа електрична PRIMO", price: 280, category: "accessory", image: "assets/pump-electric.jpg", label: "Аксесуар" },
-  { id: "pump_manual", name: "Помпа механічна Lilu", price: 220, category: "accessory", image: "assets/pump-manual.jpg", label: "Аксесуар" },
-  { id: "handle", name: "Ручка для перенесення VIAPLAST", price: 90, category: "accessory", image: "assets/handle.jpg", label: "Аксесуар" },
-  { id: "cups", name: "Стакан паперовий 250 мл (50 шт)", price: 70, category: "accessory", image: "assets/cups.jpg", label: "Аксесуар" },
+  { id: "pump_electric", name: "Помпа електрична PRIMO", price: 280, category: "pumps", image: "assets/pump-electric.webp", label: "Помпа" },
+  { id: "pump_manual", name: "Помпа механічна Lilu", price: 220, category: "pumps", image: "assets/pump-manual.webp", label: "Помпа" },
+  { id: "handle", name: "Ручка для перенесення VIAPLAST", price: 90, category: "accessory", image: "assets/handle.webp", label: "Аксесуар" },
+  { id: "cups", name: "Стакан паперовий 250 мл (50 шт)", price: 70, category: "cups", image: "assets/cups.webp", label: "Стакани" },
   {
     id: "cups_175",
     name: "Стакан паперовий білий 175 мл (50 шт)",
     price: 60,
-    category: "accessory",
+    category: "cups",
     image: "assets/paper-cups-175ml.webp",
-    label: "Аксесуар",
+    label: "Стакани",
   },
 ];
 
@@ -91,18 +91,35 @@ function waterUnitPrice(quantity) {
   return 150;
 }
 
+// Акція для нових клієнтів (така сама, як у Telegram-боті): від 2 бутлів
+// перший — 150 ₴, другий — 70 ₴, кожен наступний — 150 ₴.
+const PROMO = { requiredQty: 2, firstPrice: 150, secondPrice: 70, nextPrice: 150 };
+
+function promoWaterTotal(quantity) {
+  return PROMO.firstPrice + PROMO.secondPrice + (quantity - PROMO.requiredQty) * PROMO.nextPrice;
+}
+
 function getPricing(cart = getCart(), hasExchange = true) {
   const newCustomer = isNewCustomer();
   const lines = Object.entries(cart).map(([id, quantity]) => {
     const product = productById(id);
-    const promoApplies = id === "water_189" && quantity === 2 && newCustomer;
-    const unitPrice = id === "water_189" ? waterUnitPrice(quantity) : product.price;
-    const total = promoApplies ? 220 : unitPrice * quantity;
-    const note = promoApplies
-      ? "Акція для нових клієнтів"
-      : id === "water_189" && unitPrice < product.price
-        ? `Оптова ціна ${unitPrice} ₴/шт.`
-        : "";
+    const isWater = id === "water_189";
+    const unitPrice = isWater ? waterUnitPrice(quantity) : product.price;
+    const regularTotal = unitPrice * quantity;
+    // Акція діє, лише якщо вона вигідніша за звичайну/оптову ціну.
+    const promoTotal = isWater && newCustomer && quantity >= PROMO.requiredQty ? promoWaterTotal(quantity) : null;
+    const promoApplies = promoTotal !== null && promoTotal < regularTotal;
+    const total = promoApplies ? promoTotal : regularTotal;
+
+    let note = "";
+    if (promoApplies) {
+      const savings = product.price * quantity - promoTotal;
+      note = quantity === PROMO.requiredQty
+        ? `🎉 Акція для нових клієнтів (1-й бутель — ${PROMO.firstPrice} ₴, 2-й — ${PROMO.secondPrice} ₴, знижка ${savings} ₴)`
+        : `🎉 Акція для нових клієнтів (${PROMO.firstPrice} + ${PROMO.secondPrice} + ${quantity - PROMO.requiredQty}×${PROMO.nextPrice} = ${promoTotal} ₴, знижка ${savings} ₴)`;
+    } else if (isWater && unitPrice < product.price) {
+      note = `Оптова ціна ${unitPrice} ₴/шт.`;
+    }
     return { id, product, quantity, unitPrice, total, note, promoApplies };
   });
   const subtotal = lines.reduce((sum, line) => sum + line.total, 0);
@@ -133,9 +150,8 @@ function renderProducts() {
     ? PRODUCTS
     : PRODUCTS.filter((product) => product.category === currentFilter);
   $("#product-grid").innerHTML = products.map((product) => {
-    const productLabel = product.id === "water_189"
-      ? ""
-      : `<span class="product-label">${product.label}</span>`;
+    const labelClass = product.id === "water_189" ? "product-label accent" : "product-label";
+    const productLabel = `<span class="${labelClass}">${product.label}</span>`;
     return `
       <article class="product-card">
         ${productLabel}
@@ -348,6 +364,9 @@ async function finishOrder() {
     createdAt: new Date().toISOString(),
     cart,
     total: pricing.total,
+    newCustomer: pricing.newCustomer,
+    waterQuantity: pricing.waterQuantity,
+    deposit: pricing.deposit,
     ...checkoutState.data,
     items: pricing.lines.map((line) => ({ name: line.product.name, quantity: line.quantity, total: line.total, note: line.note })),
   };

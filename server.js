@@ -2,11 +2,43 @@
 
 const http = require("http");
 const fs = require("fs/promises");
+const fsSync = require("fs");
 const path = require("path");
 
 const ROOT = __dirname;
+
+// Завантажуємо локальні налаштування з .env без сторонніх пакетів.
+// Змінні, передані середовищем запуску, мають вищий пріоритет.
+function loadEnvFile() {
+  const envPath = path.join(ROOT, ".env");
+  if (!fsSync.existsSync(envPath)) return;
+
+  const content = fsSync.readFileSync(envPath, "utf8");
+  for (const rawLine of content.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith("#")) continue;
+
+    const separator = line.indexOf("=");
+    if (separator <= 0) continue;
+
+    const key = line.slice(0, separator).trim();
+    let value = line.slice(separator + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"'))
+      || (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+      process.env[key] = value;
+    }
+  }
+}
+
+loadEnvFile();
+
 const PORT = Number(process.env.PORT || 4173);
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8383641781:AAEywcdPDDsaVc2JCOVF2_rwefCOCJB7CAU";
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 // Чат Aqua Frank для сповіщень про нові замовлення. За потреби його можна
 // перевизначити через TELEGRAM_CHAT_ID без редагування коду.
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "-1004380997543";
@@ -77,35 +109,42 @@ function normalizeOrder(input) {
     comment: comment.slice(0, 500),
     payment,
     hasExchange: Boolean(input.hasExchange),
+    newCustomer: Boolean(input.newCustomer),
+    waterQuantity: Math.max(0, Math.min(99, Math.round(Number(input.waterQuantity) || 0))),
+    deposit: Math.max(0, Math.round(Number(input.deposit) || 0)),
     total: Math.round(total),
-    items: items.map((item) => ({
+    items: items.slice(0, 30).map((item) => ({
       name: String(item.name || "Товар").slice(0, 200),
       quantity: Math.max(1, Math.min(99, Number(item.quantity) || 1)),
       total: Math.max(0, Math.round(Number(item.total) || 0)),
-      note: String(item.note || "").slice(0, 160),
+      note: String(item.note || "").replaceAll("₴", "грн").slice(0, 160),
     })),
   };
 }
 
 function orderMessage(order) {
-  const items = order.items
-    .map((item) => `• ${escapeHtml(item.name)} × ${item.quantity} = ${formatMoney(item.total)}${item.note ? ` (${escapeHtml(item.note)})` : ""}`)
-    .join("\n");
+  const lines = order.items.map(
+    (item) => `• ${escapeHtml(item.name)} × ${item.quantity} = ${formatMoney(item.total)}${item.note ? ` ${escapeHtml(item.note)}` : ""}`,
+  );
+  if (order.deposit > 0) {
+    lines.push(`• Застава за новий бутель 18,9 л × ${order.waterQuantity} = ${formatMoney(order.deposit)}`);
+  }
 
   return [
-    `🔔 <b>Нове замовлення ${escapeHtml(order.id)}</b>`,
+    `🔔 <b>НОВЕ ЗАМОВЛЕННЯ ${escapeHtml(order.id)}!</b>`,
+    "🌐 <i>Замовлення з сайту</i>",
     "",
-    `<b>Клієнт:</b> ${escapeHtml(order.name)}`,
-    `<b>Телефон:</b> ${escapeHtml(order.phone)}`,
-    `<b>Адреса:</b> ${escapeHtml(order.address)}`,
-    `<b>Час доставки:</b> ${escapeHtml(order.deliveryTime)}`,
-    ...(order.comment ? [`<b>Коментар:</b> ${escapeHtml(order.comment)}`] : []),
-    `<b>Оплата:</b> ${escapeHtml(order.payment)}`,
-    `<b>Тара на обмін:</b> ${order.hasExchange ? "так" : "ні"}`,
+    `👤 <b>Клієнт:</b> ${escapeHtml(order.name)}${order.newCustomer ? " 🆕 <i>(новий клієнт)</i>" : ""}`,
+    `📞 <b>Телефон:</b> ${escapeHtml(order.phone)}`,
+    `📍 <b>Адреса:</b> ${escapeHtml(order.address)}`,
+    `💳 <b>Оплата:</b> ${escapeHtml(order.payment)}`,
+    `🕓 <b>Час доставки:</b> ${escapeHtml(order.deliveryTime)}`,
+    `💬 <b>Коментар:</b> ${escapeHtml(order.comment || "—")}`,
+    ...(order.waterQuantity > 0 ? [`♻️ <b>Тара на обмін:</b> ${order.hasExchange ? "є" : "немає (потрібна нова + застава)"}`] : []),
     "",
-    `<b>Товари:</b>\n${items}`,
+    `📦 <b>Замовлення:</b>\n${lines.join("\n")}`,
     "",
-    `<b>Разом:</b> ${formatMoney(order.total)}`,
+    `💵 <b>СУМА:</b> ${formatMoney(order.total)}`,
   ].join("\n");
 }
 
@@ -122,7 +161,10 @@ async function notifyTelegram(order) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: orderMessage(order), parse_mode: "HTML" }),
   });
-  if (!response.ok) throw new Error("Telegram не прийняв повідомлення.");
+  if (!response.ok) {
+    const details = await response.text().catch(() => "");
+    throw new Error(`Telegram ${response.status}: ${details.slice(0, 300)}`);
+  }
   return true;
 }
 
@@ -135,8 +177,9 @@ async function handleOrder(request, response) {
 
     try {
       sentToTelegram = await notifyTelegram(order);
-    } catch {
+    } catch (error) {
       telegramWarning = true;
+      console.error(`[${order.id}] Не вдалося надіслати в Telegram:`, error.message);
     }
 
     sendJson(response, 201, { ok: true, orderId: order.id, sentToTelegram, telegramWarning });
